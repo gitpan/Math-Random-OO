@@ -2,8 +2,7 @@ package Math::Random::OO;
 use 5.006;
 use strict;
 use warnings;
-use vars qw ($VERSION);
-$VERSION = '0.10';
+our $VERSION = "0.11";
 
 # Required modules
 use Carp;
@@ -36,7 +35,7 @@ numbers
 
 CPAN contains many modules for generating random numbers in various ways
 and from various probability distributions using pseudo-random number
-generation algorithms or other entropy sources.  (The L</"See Also"> section
+generation algorithms or other entropy sources.  (The L</"SEE ALSO"> section
 has some examples.)  Unfortunately, no standard interface exists across these
 modules.  This module defines an abstract interface for random number
 generation.  Subclasses of this model will implement specific types of random
@@ -179,9 +178,11 @@ http://rt.cpan.org/NoAuth/Bugs.html?Dist=Math-Random-OO
 
 =head1 AUTHOR
 
- David A. Golden (DAGOLDEN)
- david@dagolden.com
- http://dagolden.com/
+David A. Golden (DAGOLDEN)
+
+david@dagolden.com
+
+http://dagolden.com/
 
 =head1 COPYRIGHT
 

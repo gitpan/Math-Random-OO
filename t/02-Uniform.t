@@ -9,7 +9,6 @@ my ($test_array, $test_program);
 BEGIN {
     $test_array = [
         { 
-            name        => "",
             new_args    => [], 
             data       =>  [   
                 [0.5, 0.5],
@@ -17,7 +16,6 @@ BEGIN {
             ]
         },
         { 
-            name        => "2",
             new_args    => [2], 
             data       =>  [   
                 [0.4, 0.8],
@@ -25,7 +23,6 @@ BEGIN {
             ]
         },
         { 
-            name        => "1,6",
             new_args    => [1, 6], 
             data       =>  [   
                 [0.5, 3.5],
@@ -33,7 +30,6 @@ BEGIN {
             ]
         },
         { 
-            name        => "-1,1",
             new_args    => [-1, 1], 
             data       =>  [   
                 [0.5, 0],
@@ -41,7 +37,6 @@ BEGIN {
             ]
         },
         { 
-            name        => "2,-2",
             new_args    => [2,-2], 
             data       =>  [   
                 [0.5, 0],
@@ -55,7 +50,7 @@ BEGIN {
 
 use Test::More tests => (3 + $test_program);
 use Test::Exception;
-use Test::Float within => 1e-5;
+use Test::Number::Delta within => 1e-5;
 use Test::MockRandom 'Math::Random::OO::Uniform';
 BEGIN { Test::MockRandom::export_srand_to('Math::Random::OO::Uniform') }
 BEGIN { use_ok( 'Math::Random::OO::Uniform' ); }
@@ -66,11 +61,11 @@ can_ok ($obj, qw( seed next ));
 
 for my $case ( @$test_array ) {
     ok( $obj = $obj->new(@{$case->{new_args}}), 
-        'creating object with new('.$case->{name}.')');
+        'creating object with new('.join(", ",@{$case->{new_args}}).')');
     for my $data (@{$case->{data}}) {
         my ($seed,$val) = @$data;
         $obj->seed($seed);
-        cmp_float( $obj->next, $val, "does srand($seed),next() give $val?" );
+        delta_ok( $obj->next, $val, "does srand($seed),next() give $val?" );
     }
 }
 

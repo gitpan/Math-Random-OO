@@ -37,7 +37,7 @@ BEGIN {
 
 use Test::More tests => (4 + $test_program);
 use Test::Exception;
-use Test::Float within => 1e-5;
+use Test::Number::Delta within => 1e-5;
 BEGIN { use_ok( 'Math::Random::OO::Bootstrap' ); }
 
 my $obj;
@@ -48,11 +48,11 @@ can_ok ($obj, qw( seed next ));
 
 for my $case ( @$test_array ) {
     ok( $obj = $obj->new(@{$case->{new_args}}), 
-        'creating object with new('.$case->{name}.')');
+        'creating object with '.$case->{name}.' args to new()');
     for my $data (@{$case->{data}}) {
         my ($seed,$val) = @$data;
         $obj->seed($seed);
-        cmp_float( $obj->next, $val, "does srand($seed),next() give $val?" );
+        delta_ok( $obj->next, $val, "does srand($seed),next() give $val?" );
     }
 }
 

@@ -2,8 +2,7 @@ package Math::Random::OO::Normal;
 use 5.006;
 use strict;
 use warnings;
-use vars qw ($VERSION);
-$VERSION = "0.10";
+our $VERSION = "0.11";
 
 # Required modules
 use Carp;
@@ -215,9 +214,11 @@ http://rt.cpan.org/NoAuth/Bugs.html?Dist=Math-Random-OO
 
 =head1 AUTHOR
 
- David A. Golden (DAGOLDEN)
- dagolden@dagolden.com
- http://dagolden.com/
+David A. Golden (DAGOLDEN)
+
+dagolden@dagolden.com
+
+http://dagolden.com/
 
 =head1 COPYRIGHT
 

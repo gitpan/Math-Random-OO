@@ -13,7 +13,7 @@ Module::Build->new
 	  build_requires  => { 
 	                       Test::Simple => 0.53,
                            Test::Exception => 0.19,
-                           Test::Float => 0.10,
+                           Test::Number::Delta => 0.11,
                            Test::MockRandom => 0.93,
 	                     },
 	)->create_build_script;
