@@ -11,6 +11,8 @@ MANIFEST			This list of files
 META.yml
 README
 t/00-distribution.t
+t/00-pod.t
+t/00-podcover.t
 t/01-OO.t
 t/02-Uniform.t
 t/03-UniformInt.t

@@ -1,5 +1,8 @@
 Revision history for Perl module Math::Random::OO
 
+0.13 Wed Mar  9 06:30:16 EST 2005
+    - added pod and pod coverage testing
+
 0.12 Wed Feb  2 22:50:30 EST 2005
     - fixed test suite for new version of Test::MockRandom
     - improved test coverage
