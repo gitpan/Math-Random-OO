@@ -2,7 +2,7 @@ package Math::Random::OO::Normal;
 use 5.006;
 use strict;
 use warnings;
-our $VERSION = "0.11";
+our $VERSION = "0.12";
 
 # Required modules
 use Carp;
@@ -78,7 +78,7 @@ parameter just in case.)
 
     sub new {
         my $class = shift;
-        my $self = bless ({}, ref ($class) || $class);
+        my $self = bless {}, ref($class) ? ref($class) : $class;
         if ( @_ > 1 ) {
             $self->mean($_[0]);
             $self->stdev(abs($_[1]));

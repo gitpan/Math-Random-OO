@@ -1,5 +1,10 @@
 TODO list for Perl module Math::Random::OO
 
+Next release:
+
+- test for require errors in import()
+- improve test coverage
+
 Near term:
 
 - Rewrite M::R::OO to support use of M::R::TT as a base random function for
@@ -12,4 +17,5 @@ Long term:
 
 - Write Triangle
 - Decide on other distributions to create (e.g. LogNormal)
+- Correlated Normals
 

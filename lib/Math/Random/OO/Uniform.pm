@@ -2,7 +2,7 @@ package Math::Random::OO::Uniform;
 use 5.006;
 use strict;
 use warnings;
-our $VERSION = "0.11";
+our $VERSION = "0.12";
 
 # Required modules
 use Carp;
@@ -72,7 +72,7 @@ long as you have two parameters, C<new> will put them in the right order).
 
     sub new {
         my $class = shift;
-        my $self = bless ({}, ref ($class) || $class);
+        my $self = bless {}, ref($class) ? ref($class) : $class;
         if ( @_ > 1 ) {
             my ($low, $high) = sort { $a <=> $b } @_[0,1]; # DWIM
             $self->low($low);

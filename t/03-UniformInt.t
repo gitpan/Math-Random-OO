@@ -68,15 +68,16 @@ BEGIN {
     $test_program += @{$_->{data}} + 1 for @$test_array;
 }
 
-use Test::More tests => (3 + $test_program);
+use Test::More tests => (4 + $test_program);
 use Test::Exception;
 use Test::Number::Delta within => 1e-5;
 use Test::MockRandom 'Math::Random::OO::UniformInt';
-BEGIN { Test::MockRandom::export_srand_to('Math::Random::OO::UniformInt') }
+BEGIN { Test::MockRandom->export_srand_to('Math::Random::OO::UniformInt') }
 BEGIN { use_ok( 'Math::Random::OO::UniformInt' ); }
 
 my $obj = Math::Random::OO::UniformInt->new ();
 isa_ok ($obj, 'Math::Random::OO::UniformInt');
+isa_ok ($obj->new, 'Math::Random::OO::UniformInt');
 can_ok ($obj, qw( seed next ));
 
 for my $case ( @$test_array ) {

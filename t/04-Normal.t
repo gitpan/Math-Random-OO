@@ -14,7 +14,8 @@ BEGIN {
             data       =>  [   
                 [0.5, 0],
                 [0.3, -0.52440],
-                [0.9, 1.28155]
+                [0.9, 1.28155],
+                [0.1, -1.28155]
             ]
         },
         { 
@@ -46,16 +47,17 @@ BEGIN {
     $test_program += @{$_->{data}} + 1 for @$test_array;
 }
 
-use Test::More tests => (4 + $test_program);
+use Test::More tests => (5 + $test_program);
 use Test::Exception;
 use Test::Number::Delta within => 1e-5;
 use Test::MockRandom 'Math::Random::OO::Normal';
-BEGIN { Test::MockRandom::export_srand_to('Math::Random::OO::Normal') }
+BEGIN { Test::MockRandom->export_srand_to('Math::Random::OO::Normal') }
 
 BEGIN { use_ok( 'Math::Random::OO::Normal' ); }
 
 my $obj = Math::Random::OO::Normal->new ();
 isa_ok ($obj, 'Math::Random::OO::Normal');
+isa_ok ($obj->new, 'Math::Random::OO::Normal');
 can_ok ($obj, qw( seed next ));
 lives_ok { $obj->next } 'next handles 0 correctly?';
 

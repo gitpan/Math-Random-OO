@@ -2,12 +2,11 @@ package Math::Random::OO;
 use 5.006;
 use strict;
 use warnings;
-our $VERSION = "0.11";
+our $VERSION = "0.12";
 
 # Required modules
 use Carp;
 use Attribute::Util;
-
 
 #--------------------------------------------------------------------------#
 # main pod documentation 
@@ -131,7 +130,7 @@ specific to the subclass.
 
 sub new {
     my $class = shift;
-    return bless ({}, ref ($class) || $class);
+    return bless ({}, ref($class) ? ref($class) : $class);
 }
 
 
@@ -173,20 +172,17 @@ __END__
 =head1 BUGS
 
 Please report bugs using the CPAN Request Tracker at 
-
 http://rt.cpan.org/NoAuth/Bugs.html?Dist=Math-Random-OO
 
 =head1 AUTHOR
 
-David A. Golden (DAGOLDEN)
-
-david@dagolden.com
+David A Golden <dagolden@cpan.org>
 
 http://dagolden.com/
 
 =head1 COPYRIGHT
 
-Copyright (c) 2004 by David A. Golden
+Copyright (c) 2004, 2005 by David A. Golden
 
 This program is free software; you can redistribute
 it and/or modify it under the same terms as Perl itself.

@@ -6,7 +6,7 @@ use blib;
 # Math::Random::OO::Bootstrap  
 
 use Test::MockRandom 'Math::Random::OO::Bootstrap';
-BEGIN { Test::MockRandom::export_srand_to('Math::Random::OO::Bootstrap') }
+BEGIN { Test::MockRandom->export_srand_to('Math::Random::OO::Bootstrap') }
 
 my ($test_array, $test_program);
 
@@ -35,15 +35,17 @@ BEGIN {
     $test_program += @{$_->{data}} + 1 for @$test_array;
 }
 
-use Test::More tests => (4 + $test_program);
+use Test::More tests => (5 + $test_program);
 use Test::Exception;
 use Test::Number::Delta within => 1e-5;
 BEGIN { use_ok( 'Math::Random::OO::Bootstrap' ); }
 
 my $obj;
-dies_ok { $obj->new() } 'does new die with no arguments?';
+dies_ok { Math::Random::OO::Bootstrap->new() } 
+    'does new die with no arguments?';
 $obj = Math::Random::OO::Bootstrap->new(1);
 isa_ok ($obj, 'Math::Random::OO::Bootstrap');
+isa_ok ($obj->new(1), 'Math::Random::OO::Bootstrap');
 can_ok ($obj, qw( seed next ));
 
 for my $case ( @$test_array ) {

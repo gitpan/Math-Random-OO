@@ -2,7 +2,7 @@ package Math::Random::OO::UniformInt;
 use 5.006;
 use strict;
 use warnings;
-our $VERSION = "0.11";
+our $VERSION = "0.12";
 
 # Required modules
 use Carp;
@@ -77,7 +77,7 @@ range is calculated.  I.e., C<new(-1.2, 3.6)> is equivalent to C<new(-1,3)>.
 
     sub new {
         my $class = shift;
-        my $self = bless ({}, ref ($class) || $class);
+        my $self = bless {}, ref($class) ? ref($class) : $class;
         if ( @_ > 1 ) {
             my ($low, $high) = sort { $a <=> $b } @_[0,1]; # DWIM
             $self->low(int($low));

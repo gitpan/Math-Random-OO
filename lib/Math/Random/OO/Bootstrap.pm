@@ -2,7 +2,7 @@ package Math::Random::OO::Bootstrap;
 use 5.006;
 use strict;
 use warnings;
-our $VERSION = "0.11";
+our $VERSION = "0.12";
 
 # Required modules
 use Carp;
@@ -79,7 +79,7 @@ It is an error to call C<new> with no arguments.
 
     sub new {
         my $class = shift;
-        my $self = bless ({}, ref ($class) || $class);
+        my $self = bless {}, ref($class) ? ref($class) : $class;
         if ( @_ == 0 ) {
             croak 'Math::Random::OO::Bootstrap->new() requires an argument';
         }
