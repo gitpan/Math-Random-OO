@@ -1,5 +1,9 @@
 Revision history for Perl module Math::Random::OO
 
+0.14 Tue Jun  7 18:10:09 EDT 2005
+    - fixed dependencies in Build.PL
+    - changed Makefile compatibility
+
 0.13 Wed Mar  9 06:30:16 EST 2005
     - added pod and pod coverage testing
 

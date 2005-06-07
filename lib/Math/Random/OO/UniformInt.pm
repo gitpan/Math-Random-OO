@@ -2,7 +2,7 @@ package Math::Random::OO::UniformInt;
 use 5.006;
 use strict;
 use warnings;
-our $VERSION = "0.13";
+our $VERSION = "0.14";
 
 # Required modules
 use Carp;
