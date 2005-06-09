@@ -7,16 +7,13 @@ WriteMakefile
           'PREREQ_PM' => {
                            'Attribute::Util' => '0.02',
                            'Params::Validate' => '0.76',
-                           'Test::Distribution' => '1.18',
                            'Test::Exception' => '0.2',
                            'Test::MockRandom' => '0.95',
-                           'Test::More' => '0.6',
-                           'Test::Number::Delta' => '0.14',
-                           'Test::Pod' => '1.2',
-                           'Test::Pod::Coverage' => '1.06',
-                           'base' => '2.06'
+                           'Test::More' => '0.47',
+                           'Test::Number::Delta' => '0.14'
                          },
           'INSTALLDIRS' => 'site',
+          'EXE_FILES' => [],
           'PL_FILES' => {}
         )
 ;
