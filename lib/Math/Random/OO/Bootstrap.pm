@@ -2,7 +2,7 @@ package Math::Random::OO::Bootstrap;
 use 5.006;
 use strict;
 use warnings;
-our $VERSION = "0.19";
+our $VERSION = '0.21';
 
 # Required modules
 use Carp;
@@ -24,7 +24,7 @@ resampling from a non-parametric distibution
   use Math::Random::OO::Bootstrap;
   @sample = qw( 2 3 3 4 4 5 5 6 6 7 );
   $prng = Math::Random::OO::Bootstrap->new(@sample);
-  $prng->seed(0.42);
+  $prng->seed(42);
   $prng->next() # draws randomly from the sample
   
 =head1 DESCRIPTION
@@ -105,7 +105,7 @@ first seed value matters.
 
 sub seed {
 	my $self = shift;
-    srand(@_);
+    srand($_[0]);
 }
 
 
