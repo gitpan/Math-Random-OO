@@ -1,20 +1,48 @@
-package Math::Random::OO;
 use 5.006;
 use strict;
 use warnings;
-our $VERSION = '0.21';
 
-# Required modules
+package Math::Random::OO;
+# ABSTRACT: Consistent object-oriented interface for generating random numbers
+our $VERSION = '0.22'; # VERSION
+
 use Carp;
 
-#--------------------------------------------------------------------------#
-# main pod documentation 
-#--------------------------------------------------------------------------#
+sub import {
+    my ( $class, @symbols ) = @_;
+    my $caller = caller;
+    for (@symbols) {
+        no strict 'refs';
+        my $subclass = "Math::Random::OO::$_";
+        eval "require $subclass";
+        *{"${caller}::$_"} = sub { return ${subclass}->new(@_) };
+    }
+}
+
+sub new {
+    my $class = shift;
+    return bless( {}, ref($class) ? ref($class) : $class );
+}
+
+sub seed { die "call to abstract method 'seed'" }
+
+sub next { die "call to abstract method 'next'" }
+
+1;
+
+__END__
+
+=pod
+
+=encoding utf-8
 
 =head1 NAME
 
-Math::Random::OO - Consistent object-oriented interface for generating random
-numbers
+Math::Random::OO - Consistent object-oriented interface for generating random numbers
+
+=head1 VERSION
+
+version 0.22
 
 =head1 SYNOPSIS
 
@@ -48,12 +76,6 @@ probability distribution.
 
 =head1 USAGE
 
-=cut
-
-#--------------------------------------------------------------------------#
-# import()
-#--------------------------------------------------------------------------#
-
 =head2 Factory Functions
 
  use Math::Random::OO qw( Uniform UniformInt Normal Bootstrap );
@@ -61,7 +83,7 @@ probability distribution.
  $uni_int = UniformInt(1,6);
  $normal  = Normal(1,1);
  $boot    = Bootstrap( 2, 3, 3, 4, 4, 4, 5, 5, 5 );
- 
+
 In addition to defining the abstract interface for subclasses, this module
 imports subclasses and exports factory functions upon request to simplify
 creating many random number generators at once without typing
@@ -94,48 +116,15 @@ a non-parameteric distribution)
 
 =back
 
-=cut
-
-sub import {
-    my ($class, @symbols) = @_;
-    my $caller = caller;
-    for (@symbols) {
-        no strict 'refs';
-        my $subclass = "Math::Random::OO::$_";
-        eval "require $subclass";
-        *{"${caller}::$_"} = 
-            eval "sub { return ${subclass}->new(\@_) }";
-    }
-}
-
 =head1 INTERFACE
 
 All Math::Random::OO subclasses must follow a standard interface.  They must
 provide a C<new> method, a C<seed> method, and a C<next> method.  Specific 
 details are left to each interface.
 
-=cut
-
-#--------------------------------------------------------------------------#
-# new()
-#--------------------------------------------------------------------------#
-
 =head2 C<new>
 
-This is the standard constructor.  Each subclass will define parameters 
-specific to the subclass.  
-
-=cut
-
-sub new {
-    my $class = shift;
-    return bless ({}, ref($class) ? ref($class) : $class);
-}
-
-
-#--------------------------------------------------------------------------#
-# seed()
-#--------------------------------------------------------------------------#
+This is the standard constructor.  Each subclass will define parameters specific to the subclass.
 
 =head2 C<seed>
 
@@ -147,15 +136,8 @@ a list of seeds, the interface mandates that a list must be acceptable.
 Generators requiring a single seed must use the first value in the list.
 
 As seeds may be passed to the built-in C<srand()> function, they may be 
-truncated as integers, so 0.12 and 0.34 would be the same seed.
-
-=cut
-
-sub seed { die "call to abstract method 'seed'" }
-
-#--------------------------------------------------------------------------#
-# rand()
-#--------------------------------------------------------------------------#
+truncated as integers, so 0.12 and 0.34 would be the same seed.  Only
+positive integers should be used.
 
 =head2 C<next>
 
@@ -163,34 +145,6 @@ sub seed { die "call to abstract method 'seed'" }
 
 This method returns the next random number from the random number generator.
 It does not take (and must not use) any parameters. 
-
-=cut
-
-sub next { die "call to abstract method 'next'" }
-
-1; #this line is important and will help the module return a true value
-__END__
-
-=head1 BUGS
-
-Please report bugs using the CPAN Request Tracker at 
-http://rt.cpan.org/NoAuth/Bugs.html?Dist=Math-Random-OO
-
-=head1 AUTHOR
-
-David A Golden <dagolden@cpan.org>
-
-http://dagolden.com/
-
-=head1 COPYRIGHT
-
-Copyright (c) 2004, 2005 by David A. Golden
-
-This program is free software; you can redistribute
-it and/or modify it under the same terms as Perl itself.
-
-The full text of the license can be found in the
-LICENSE file included with this module.
 
 =head1 SEE ALSO
 
@@ -210,5 +164,36 @@ perl56delta, this may already be the default after perl 5.005_52 if available)
 =item L<Math::TrulyRandom> -- an interface to random numbers from interrupt timing discrepancies
 
 =back
+
+=for :stopwords cpan testmatrix url annocpan anno bugtracker rt cpants kwalitee diff irc mailto metadata placeholders metacpan
+
+=head1 SUPPORT
+
+=head2 Bugs / Feature Requests
+
+Please report any bugs or feature requests through the issue tracker
+at L<https://github.com/dagolden/math-random-oo/issues>.
+You will be notified automatically of any progress on your issue.
+
+=head2 Source Code
+
+This is open source software.  The code repository is available for
+public review and contribution under the terms of the license.
+
+L<https://github.com/dagolden/math-random-oo>
+
+  git clone git://github.com/dagolden/math-random-oo.git
+
+=head1 AUTHOR
+
+David Golden <dagolden@cpan.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is Copyright (c) 2013 by David Golden.
+
+This is free software, licensed under:
+
+  The Apache License, Version 2.0, January 2004
 
 =cut

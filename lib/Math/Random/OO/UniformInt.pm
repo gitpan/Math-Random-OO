@@ -1,8 +1,10 @@
-package Math::Random::OO::UniformInt;
 use 5.006;
 use strict;
 use warnings;
-our $VERSION = '0.21';
+
+package Math::Random::OO::UniformInt;
+# ABSTRACT: Generates random integers with uniform probability
+our $VERSION = '0.22'; # VERSION
 
 # Required modules
 use Carp;
@@ -10,14 +12,65 @@ use Params::Validate ':all';
 
 # ISA
 use base qw( Class::Accessor::Fast );
-#--------------------------------------------------------------------------#
-# main pod documentation #####
-#--------------------------------------------------------------------------#
+
+
+{
+    my $param_spec = {
+        low  => { type => SCALAR },
+        high => { type => SCALAR }
+    };
+
+    __PACKAGE__->mk_accessors( keys %$param_spec );
+    #__PACKAGE__->mk_ro_accessors( keys %$param_spec );
+
+    sub new {
+        my $class = shift;
+        my $self = bless {}, ref($class) ? ref($class) : $class;
+        if ( @_ > 1 ) {
+            my ( $low, $high ) = sort { $a <=> $b } @_[ 0, 1 ]; # DWIM
+            $self->low( int($low) );
+            $self->high( int($high) );
+        }
+        elsif ( @_ == 1 ) {
+            $self->low(0);
+            $self->high( int( $_[0] ) );
+        }
+        else {
+            $self->low(0);
+            $self->high(1);
+        }
+        return $self;
+    }
+}
+
+
+sub seed {
+    my $self = shift;
+    srand( $_[0] );
+}
+
+
+sub next {
+    my ($self) = @_;
+    my $rnd = int( rand( $self->high - $self->low + 1 ) ) + $self->low;
+    return $rnd;
+}
+
+1;
+
+__END__
+
+=pod
+
+=encoding utf-8
 
 =head1 NAME
 
-Math::Random::OO::UniformInt - Generates random integers with uniform 
-probability
+Math::Random::OO::UniformInt - Generates random integers with uniform probability
+
+=head1 VERSION
+
+version 0.22
 
 =head1 SYNOPSIS
 
@@ -28,20 +81,13 @@ probability
       Math::Random::OO::UniformInt->new(-1,1); # -1, 0, or 1
   $_->seed(42) for @prngs;
   print( $_->next() . "\n" ) for @prngs;
-  
+
 =head1 DESCRIPTION
 
 This subclass of L<Math::Random::OO> generates random integers with uniform
 probability.
 
-=head1 USAGE
-
-
-=cut
-
-#--------------------------------------------------------------------------#
-# new()
-#--------------------------------------------------------------------------#
+=head1 METHODS
 
 =head2 C<new>
 
@@ -63,61 +109,12 @@ as you have two parameters, C<new> will put them in the right order).  If
 parameters are non-integers, they will be truncated to integers before the
 range is calculated.  I.e., C<new(-1.2, 3.6)> is equivalent to C<new(-1,3)>.
 
-=cut
-
-
-{
-    my $param_spec = {
-        low => { type => SCALAR },
-        high => { type => SCALAR }
-    };
-
-    __PACKAGE__->mk_accessors( keys %$param_spec );
-    #__PACKAGE__->mk_ro_accessors( keys %$param_spec );
-
-    sub new {
-        my $class = shift;
-        my $self = bless {}, ref($class) ? ref($class) : $class;
-        if ( @_ > 1 ) {
-            my ($low, $high) = sort { $a <=> $b } @_[0,1]; # DWIM
-            $self->low(int($low));
-            $self->high(int($high));
-        }
-        elsif (@_ == 1) {
-            $self->low(0);
-            $self->high(int($_[0]));
-        }
-        else {
-            $self->low(0);
-            $self->high(1);
-        }
-        return $self;
-    }
-}
-
-
-#--------------------------------------------------------------------------#
-# seed()
-#--------------------------------------------------------------------------#
-
 =head2 C<seed>
 
  $rv = $prng->seed( @seeds );
 
 This method seeds the random number generator.  At the moment, only the
-first seed value matters.
-
-=cut
-
-sub seed {
-	my $self = shift;
-    srand($_[0]);
-}
-
-
-#--------------------------------------------------------------------------#
-# next()
-#--------------------------------------------------------------------------#
+first seed value matters.  It should be a positive integer.
 
 =head2 C<next>
 
@@ -126,44 +123,16 @@ sub seed {
 This method returns the next random number from the random number generator.
 It does not take any parameters.
 
-=cut
-
-sub next {
-	my ($self) = @_;
-    my $rnd = int(rand($self->high - $self->low + 1 )) + $self->low;
-    return $rnd;	
-}
-
-1; #this line is important and will help the module return a true value
-__END__
-
-=head1 BUGS
-
-Please report bugs using the CPAN Request Tracker at 
-
-http://rt.cpan.org/NoAuth/Bugs.html?Dist=Math-Random-OO
-
 =head1 AUTHOR
 
-David A. Golden (DAGOLDEN)
+David Golden <dagolden@cpan.org>
 
-dagolden@dagolden.com
+=head1 COPYRIGHT AND LICENSE
 
-http://dagolden.com/
+This software is Copyright (c) 2013 by David Golden.
 
-=head1 COPYRIGHT
+This is free software, licensed under:
 
-Copyright (c) 2004 by David A. Golden
-
-This program is free software; you can redistribute
-it and/or modify it under the same terms as Perl itself.
-
-The full text of the license can be found in the
-LICENSE file included with this module.
-
-
-=head1 SEE ALSO
-
-L<Math::Random::OO>
+  The Apache License, Version 2.0, January 2004
 
 =cut

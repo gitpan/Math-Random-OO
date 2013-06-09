@@ -1,8 +1,10 @@
-package Math::Random::OO::Normal;
 use 5.006;
 use strict;
 use warnings;
-our $VERSION = '0.21';
+
+package Math::Random::OO::Normal;
+# ABSTRACT: Generates random numbers from the normal (Gaussian) distribution
+our $VERSION = '0.22'; # VERSION
 
 # Required modules
 use Carp;
@@ -10,66 +12,11 @@ use Params::Validate ':all';
 
 # ISA
 use base qw( Class::Accessor::Fast );
-#--------------------------------------------------------------------------#
-# main pod documentation #####
-#--------------------------------------------------------------------------#
 
-=head1 NAME
-
-Math::Random::OO::Normal - Generates random numbers from the normal (Gaussian)
-distribution
-
-=head1 SYNOPSIS
-
-  use Math::Random::OO::Normal;
-  push @prngs,
-      Math::Random::OO::Normal->new(),     # mean 0, stdev 1
-      Math::Random::OO::Normal->new(5),    # mean 5, stdev 1
-      Math::Random::OO::Normal->new(1,3);  # mean 1, stdev 3
-  $_->seed(42) for @prngs;
-  print( $_->next() . "\n" ) for @prngs;
-
-=head1 DESCRIPTION
-
-This subclass of L<Math::Random::OO> generates random reals from the normal 
-probability distribution, also called the Gaussian or bell-curve distribution.
-
-The module generates random normals from the inverse of the cumulative 
-normal distribution using an approximation algorithm developed by Peter J. 
-Acklam and released into the public domain.  This algorithm claims a
-relative error of less than 1.15e-9 over the entire region.
-
-See http://home.online.no/~pjacklam/notes/invnorm/ for details and discussion.
-
-=head1 USAGE
-
-=cut
-
-#--------------------------------------------------------------------------#
-# new()
-#--------------------------------------------------------------------------#
-
-=head2 C<new>
-
- $prng1 = Math::Random::OO::Normal->new();
- $prng2 = Math::Random::OO::Normal->new($mean);
- $prng3 = Math::Random::OO::Normal->new($mean,$stdev);
-
-C<new> takes up to two optional parameters and returns a new
-C<Math::Random::OO::Normal> object.  With no parameters, the object generates
-random numbers from the standard normal distribution (mean zero, standard
-deviation one).  With a single parameter, the object generates random numbers
-with mean equal to the parameter and standard deviation of one.  With two
-parameters, the object generates random numbers with mean equal to the first
-parameter and standard deviation equal to the second parameter.  (Standard
-deviation should be positive, but this module takes the absolute value of the
-parameter just in case.)
-
-=cut
 
 {
     my $param_spec = {
-        mean => { type => SCALAR },
+        mean  => { type => SCALAR },
         stdev => { type => SCALAR }
     };
 
@@ -80,11 +27,11 @@ parameter just in case.)
         my $class = shift;
         my $self = bless {}, ref($class) ? ref($class) : $class;
         if ( @_ > 1 ) {
-            $self->mean($_[0]);
-            $self->stdev(abs($_[1]));
+            $self->mean( $_[0] );
+            $self->stdev( abs( $_[1] ) );
         }
-        elsif (@_ == 1) {
-            $self->mean($_[0]);
+        elsif ( @_ == 1 ) {
+            $self->mean( $_[0] );
             $self->stdev(1);
         }
         else {
@@ -95,45 +42,17 @@ parameter just in case.)
     }
 }
 
-#--------------------------------------------------------------------------#
-# seed()
-#--------------------------------------------------------------------------#
-
-=head2 C<seed>
-
- $rv = $prng->seed( @seeds );
-
-This method seeds the random number generator.  At the moment, only the
-first seed value matters.
-
-=cut
 
 sub seed {
-	my $self = shift;
-    srand($_[0]);
+    my $self = shift;
+    srand( $_[0] );
 }
 
 
-#--------------------------------------------------------------------------#
-# next()
-#--------------------------------------------------------------------------#
-
-=head2 C<next>
-
- $rnd = $prng->next();
-
-This method returns the next random number from the random number generator.
-It does not take any parameters.
-
-=cut
-
 sub next {
-	my ($self) = @_;
+    my ($self) = @_;
     my $rnd = rand() || 1e-254; # can't have zero for normals
-    # _ltqnorm on (0,1) ranges from about -38 to 8, so we'll use
-    # the bottom half and invert it for the top half
-    my $norm = ( $rnd <= 0.5 ) ? _ltqnorm($rnd) : -( _ltqnorm(1-$rnd) );
-    return $norm * $self->stdev + $self->mean;
+    return _ltqnorm($rnd) * $self->stdev + $self->mean;
 }
 
 #--------------------------------------------------------------------------#
@@ -144,7 +63,8 @@ sub next {
 # Input checking removed by DAGOLDEN as the input will be prechecked
 #--------------------------------------------------------------------------#
 
-sub _ltqnorm ($) {
+#<<< No perltidy
+sub _ltqnorm {
     # Lower tail quantile for standard normal distribution function.
     #
     # This function returns an approximation of the inverse cumulative
@@ -202,36 +122,88 @@ sub _ltqnorm ($) {
     return ((((($a[0]*$r+$a[1])*$r+$a[2])*$r+$a[3])*$r+$a[4])*$r+$a[5])*$q /
            ((((($b[0]*$r+$b[1])*$r+$b[2])*$r+$b[3])*$r+$b[4])*$r+1);
 }
+#>>>
 
-1; #this line is important and will help the module return a true value
+1;
+
 __END__
 
-=head1 BUGS
+=pod
 
-Please report bugs using the CPAN Request Tracker at 
+=encoding utf-8
 
-http://rt.cpan.org/NoAuth/Bugs.html?Dist=Math-Random-OO
+=head1 NAME
+
+Math::Random::OO::Normal - Generates random numbers from the normal (Gaussian) distribution
+
+=head1 VERSION
+
+version 0.22
+
+=head1 SYNOPSIS
+
+  use Math::Random::OO::Normal;
+  push @prngs,
+      Math::Random::OO::Normal->new(),     # mean 0, stdev 1
+      Math::Random::OO::Normal->new(5),    # mean 5, stdev 1
+      Math::Random::OO::Normal->new(1,3);  # mean 1, stdev 3
+  $_->seed(42) for @prngs;
+  print( $_->next() . "\n" ) for @prngs;
+
+=head1 DESCRIPTION
+
+This subclass of L<Math::Random::OO> generates random reals from the normal 
+probability distribution, also called the Gaussian or bell-curve distribution.
+
+The module generates random normals from the inverse of the cumulative 
+normal distribution using an approximation algorithm developed by Peter J. 
+Acklam and released into the public domain.  This algorithm claims a
+relative error of less than 1.15e-9 over the entire region.
+
+See http://home.online.no/~pjacklam/notes/invnorm/ for details and discussion.
+
+=head1 METHODS
+
+=head2 C<new>
+
+ $prng1 = Math::Random::OO::Normal->new();
+ $prng2 = Math::Random::OO::Normal->new($mean);
+ $prng3 = Math::Random::OO::Normal->new($mean,$stdev);
+
+C<new> takes up to two optional parameters and returns a new
+C<Math::Random::OO::Normal> object.  With no parameters, the object generates
+random numbers from the standard normal distribution (mean zero, standard
+deviation one).  With a single parameter, the object generates random numbers
+with mean equal to the parameter and standard deviation of one.  With two
+parameters, the object generates random numbers with mean equal to the first
+parameter and standard deviation equal to the second parameter.  (Standard
+deviation should be positive, but this module takes the absolute value of the
+parameter just in case.)
+
+=head2 C<seed>
+
+ $rv = $prng->seed( @seeds );
+
+This method seeds the random number generator.  At the moment, only the
+first seed value matters.  It should be a positive integer.
+
+=head2 C<next>
+
+ $rnd = $prng->next();
+
+This method returns the next random number from the random number generator.
+It does not take any parameters.
 
 =head1 AUTHOR
 
-David A. Golden (DAGOLDEN)
+David Golden <dagolden@cpan.org>
 
-dagolden@dagolden.com
+=head1 COPYRIGHT AND LICENSE
 
-http://dagolden.com/
+This software is Copyright (c) 2013 by David Golden.
 
-=head1 COPYRIGHT
+This is free software, licensed under:
 
-Copyright (c) 2004 by David A. Golden
-
-This program is free software; you can redistribute
-it and/or modify it under the same terms as Perl itself.
-
-The full text of the license can be found in the
-LICENSE file included with this module.
-
-=head1 SEE ALSO
-
-L<Math::Random::OO>
+  The Apache License, Version 2.0, January 2004
 
 =cut
